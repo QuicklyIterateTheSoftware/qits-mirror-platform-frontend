@@ -1,12 +1,12 @@
 # QitsPlatformSpaMirror
 
 The mirror explorer: what this platform has pulled through its caches, and which registries it
-fronts. Served by qits-platform-mirror itself at `/mirror/` through Quinoa. Two pages, and both of
-them are read.
+fronts. Served by qits-platform-mirror itself at `/` on `mirror.<env>.<domain>` through Quinoa —
+the same host dockerd, npm and maven already dial. Two pages, and both of them are read.
 
-- **`/mirror/`** — every cached repository, with the wire type that says which format it fronts:
+- **`/`** — every cached repository, with the wire type that says which format it fronts:
   `npm-proxy`, `maven-proxy`, `oci-mirror`.
-- **`/mirror/upstreams`** — the OCI registries this mirror fronts, as rows of `oci_mirror_upstream`.
+- **`/upstreams`** — the OCI registries this mirror fronts, as rows of `oci_mirror_upstream`.
 
 **This is the mirror, not the store.** Nothing here was published to this platform: every byte came
 from npmjs, Maven Central or a mirrored image registry, and can be fetched again — which is what
@@ -37,12 +37,14 @@ documents rather than clients.
 ## How it is served
 
 qits-platform-mirror carries this repository as a git submodule at `service/src/main/webui` —
-Quinoa's `web-ui-dir` — and builds it during `mvn package`, serving the bundle at `/mirror/`. The
-segment is spelled here as `baseHref` in `angular.json` and there as `quarkus.quinoa.ui-root-path`;
-the two move together. This repository ships no container image of its own.
+Quinoa's `web-ui-dir` — and builds it during `mvn package`, serving the bundle at `/`. The root is
+spelled here as `baseHref` in `angular.json` and there as `quarkus.quinoa.ui-root-path`; the two
+move together. This repository ships no container image of its own.
 
-Note the known wart, which is every client's alike: bare `/mirror` (no trailing slash) is a 404.
-`/mirror/` works.
+**This is a `system` app.** Its pages are about the platform's caches rather than about one project,
+so it routes no `/<projectSlug>/...` form — `provideQitsScope('system')` in `app.config.ts` says so,
+and picking a project in the chrome's picker leaves for qits-projects instead of rewriting an address
+this app does not serve. The old bare-`/mirror` trailing-slash wart went with the move to the root.
 
 ## Development server
 
@@ -50,13 +52,13 @@ Note the known wart, which is every client's alike: bare `/mirror` (no trailing 
 ng serve
 ```
 
-Then open `http://localhost:4200/`. `proxy.conf.json` forwards `/mirror/api` to a gateway on
-`localhost:8080`, because `ng serve` puts no gateway in front. In a deployment every call is a
-same-origin path behind the real gateway. These reads carry no credential in either case.
+Then open `http://localhost:4200/`. `proxy.conf.json` forwards `/mirror/api`, `/projects/api` and
+`/main-navigation` to an edge on `localhost:8080`, because `ng serve` puts none in front. In a
+deployment every call is a same-origin path behind the real edge. These reads carry no credential in
+either case.
 
-The platform chrome asks the gateway for `/main-navigation`, which `ng serve` does not proxy — so
-the sidebar renders "Navigation unavailable" locally, and this app's own two views appear beneath
-it. That is the intended degraded state, not a fault.
+With no edge answering `/main-navigation` the sidebar renders "Navigation unavailable" and this
+app's own two views appear beneath it. That is the intended degraded state, not a fault.
 
 ## Running the checks
 

@@ -13,8 +13,8 @@ import { UpstreamsPage } from './upstreams/upstreams-page';
  * navigation mount once and survive every navigation beneath them; wrapping each page in a tag
  * would rebuild the whole skeleton on every hop.
  *
- * Its links leave this SPA on purpose: every destination is a different Angular application behind
- * its own base path, so they are plain `<a href>` full-document navigations. The list comes from
+ * Its links leave this SPA on purpose: every destination is a different Angular application on a
+ * host of its own, so they are plain `<a href>` full-document navigations. The tree comes from
  * `provideQitsNavigation()` — see app.config.ts — and this client passes no links of its own. The
  * two doors *inside* this app are a sub-menu the shell hands to the layout instead; see app.ts.
  *
@@ -25,8 +25,13 @@ import { UpstreamsPage } from './upstreams/upstreams-page';
  * Both load eagerly. There are two of them, they share every component below them, and a lazy chunk
  * boundary would be ceremony that costs a round trip.
  *
- * The `**` route sits inside the layout: `/mirror/` is a segment this application owns outright, so
- * an unknown URL under it is an ordinary 404 and is drawn with the chrome around it.
+ * **Every address here starts at the root**, because this application is served at `/` on its own
+ * host. It is a `system` app: its pages are about the platform's caches rather than about one
+ * project, so it has no `/<slug>/...` form and adds none — picking a project in the chrome leaves
+ * for qits-projects instead.
+ *
+ * The `**` route sits inside the layout: this host is this application's outright, so an unknown URL
+ * on it is an ordinary 404 and is drawn with the chrome around it.
  */
 export const routes: Routes = [
   {
