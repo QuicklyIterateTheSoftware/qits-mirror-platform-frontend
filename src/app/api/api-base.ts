@@ -3,9 +3,9 @@ import { InjectionToken } from '@angular/core';
 /**
  * The origin every request in this app is built on, and it is empty on purpose.
  *
- * The SPA is served at `/mirror/` by qits-platform-mirror itself, behind the same gateway that
- * serves `/mirror/api/…` — so a same-origin absolute path is not a shortcut, it is what keeps these
- * reads free of CORS and of any credential. A configured base URL would move them cross-origin and
+ * The SPA is served at `/` on `mirror.<env>.<domain>` by qits-platform-mirror itself, and the edge
+ * path-routes `/mirror/api/…` to that same service on that same host — so a same-origin absolute
+ * path is not a shortcut, it is what keeps these reads free of CORS and of any credential. A configured base URL would move them cross-origin and
  * buy nothing: every read here is already unauthenticated.
  *
  * It is a token rather than a constant for one reason: a spec needs a seam to assert the path
