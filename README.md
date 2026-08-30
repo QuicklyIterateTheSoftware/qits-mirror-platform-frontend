@@ -1,4 +1,4 @@
-# QitsPlatformSpaMirror
+# qits-mirror-platform-frontend
 
 The mirror explorer: what this platform has pulled through its caches, and which registries it
 fronts. Served by qits-platform-mirror itself at `/` on `mirror.<env>.<domain>` through Quinoa —
@@ -36,10 +36,11 @@ documents rather than clients.
 
 ## How it is served
 
-qits-platform-mirror carries this repository as a git submodule at `service/src/main/webui` —
-Quinoa's `web-ui-dir` — and builds it during `mvn package`, serving the bundle at `/`. The root is
-spelled here as `baseHref` in `angular.json` and there as `quarkus.quinoa.ui-root-path`; the two
-move together. This repository ships no container image of its own.
+qits-mirror-platform-service carries this repository as a git submodule at
+`service/src/main/webui` — Quinoa's `web-ui-dir` — and builds it during `mvn package`, serving the
+bundle at `/`. The root is spelled here as `baseHref` in `angular.json` and there as
+`quarkus.quinoa.ui-root-path`; the two move together. This repository ships no container image of
+its own.
 
 **This is a `system` app.** Its pages are about the platform's caches rather than about one project,
 so it routes no `/<projectSlug>/...` form — `provideQitsScope('system')` in `app.config.ts` says so,
