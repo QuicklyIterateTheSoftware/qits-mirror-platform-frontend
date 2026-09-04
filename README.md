@@ -67,10 +67,11 @@ app's own two views appear beneath it. That is the intended degraded state, not 
 npm run lint && npm test && npm run build
 ```
 
-The same three, in the same order, are what `.config/qits/ci-post-receive.yml` runs on every push.
-Note what that pipeline installs from: the npm proxy behind it **is** qits-platform-mirror, and the
-`@qits` scope comes from qits-artifacts — so a run here cannot be green while either service is
-down. Their deploys are taken alone, with the CI queue empty.
+The same three, in the same order, are what `.config/qits/ci-event-release-request.yml` runs on a
+release request's fold — the one pipeline this repository has, since nothing builds on a push any
+more. Note what that pipeline installs from: the npm proxy behind it **is** qits-platform-mirror,
+and the `@qits` scope comes from qits-artifacts — so a run here cannot be green while either service
+is down. Their deploys are taken alone, with the CI queue empty.
 
 ## Building
 
